@@ -5,6 +5,7 @@ import cors from "cors";
 import colors from "colors";
 import connectDb from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 connectDb();
@@ -19,6 +20,8 @@ app.get("/api", (req, res) => {
 });
 
 app.use("/api/products", productRoutes);
+
+app.use("/api/users", userRoutes);
 
 app.use(notFound), app.use(errorHandler);
 
