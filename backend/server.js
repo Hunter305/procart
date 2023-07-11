@@ -6,11 +6,17 @@ import colors from "colors";
 import connectDb from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 connectDb();
 
 const app = express();
+
+//body parser middleware
+app.use(express.json()); // for raw json
+app.use(express.urlencoded({ extended: true })); //for url parsing
+app.use(cookieParser());
 const port = process.env.PORT || 5000;
 
 app.use(cors());
