@@ -1,11 +1,32 @@
-import { Navbar, Nav, Container, Badge } from "react-bootstrap";
+import { Navbar, Nav, Container, Badge, NavDropdown } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { useLogoutMutation } from "../slices/usersApiSlice";
+import { logout } from "../slices/authSlice";
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [logoutApiCall] = useLogoutMutation();
+
+  const logoutHandler = async () => {
+    try {
+      localStorage.removeItem("userInfo");
+      await logoutApiCall().unwrap();
+      dispatch(logout);
+      navigate("/");
+      location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <header>
@@ -14,7 +35,7 @@ const Header = () => {
           <LinkContainer to={"/"}>
             <Navbar.Brand>
               <img src={logo} alt="proshop" />
-              ProShop
+              Procart
             </Navbar.Brand>
           </LinkContainer>
 
@@ -32,12 +53,23 @@ const Header = () => {
                   )}
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to={"/login"}>
-                <Nav.Link>
-                  <FaUser />
-                  Sign in
-                </Nav.Link>
-              </LinkContainer>
+              {userInfo ? (
+                <NavDropdown title={userInfo.name} id="username">
+                  <LinkContainer to={"/profile"}>
+                    <NavDropdown.Item>profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Item onClick={logoutHandler}>
+                    logout{" "}
+                  </NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <LinkContainer to={"/login"}>
+                  <Nav.Link>
+                    <FaUser />
+                    Sign in
+                  </Nav.Link>
+                </LinkContainer>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
