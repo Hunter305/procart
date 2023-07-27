@@ -1,5 +1,15 @@
 # ProCart eCommerce Platform (v2)
 
+```
+# Sample User Logins
+
+admin@email.com (Admin)
+1234
+
+avinash@email.com (Customer)
+1234
+```
+
 > eCommerce platform built with the MERN stack & Redux.
 
 ## Features
